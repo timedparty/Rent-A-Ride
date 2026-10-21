@@ -3,6 +3,7 @@ const register = require('../controllers/authController.js').register
 const login = require('../controllers/authController.js').login
 const getMe = require('../controllers/authController.js').getMe
 const protect = require('../middleware/authMiddleware.js').protect
+const adminOnly = require('../middleware/authMiddleware.js').adminOnly
 
 const router = express.Router()
 
