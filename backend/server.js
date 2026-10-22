@@ -3,6 +3,7 @@ const connectDB = require('./config/db');
 const cors = require('cors');
 const authRoutes = require('./routes/authRoutes.js');
 const vehicleRoutes = require('./routes/vehicleRoutes.js');
+const branchRoutes = require('./routes/branchRoutes.js');
 require('dotenv').config();
 
 const app = express();
@@ -10,6 +11,7 @@ app.use(cors());
 app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/vehicles', vehicleRoutes);
+app.use('/api/branches', branchRoutes);
 const PORT = process.env.PORT
 
 app.get('/', (req, res) => {
