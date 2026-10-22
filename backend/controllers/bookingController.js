@@ -80,4 +80,51 @@ async function createBooking(req, res) {
     }
 }
 
-module.exports = {createBooking}
+async function getMyBookings(req, res) {
+    try {
+        const bookings = await Booking.find({customer: req.user.id})
+            .sort({createdAt:  -1})
+            .populate('vehicle', 'vehicleBrand vehicleModel registrationNo dailyRent')
+            .populate('pickupBranch', 'branchName city')
+            .populate('dropoffBranch', 'branchName city')
+
+        return res.status(200).json(bookings)
+    }
+
+    catch(error) {
+        console.error(error)
+        res.status(500).json({message: "Server error please try again after some time"})
+    }
+}
+
+async function cancelBooking(req, res) {
+    try {
+        const id = req.params.id
+        if(!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({message: "Invalid booking id"})
+        }
+
+        const booking = await Booking.findById(id)
+        if(!booking) {
+            return res.status(404).json({message: "Booking not found"})
+        }
+
+        if(booking.customer.toString() !== req.user.id) {
+            return res.status(403).json({message: "Invalid booking"})
+        }
+
+        if(!['pending', 'confirmed'].includes(booking.status)) {
+            return res.status(400).json({message: `Cannot cancel a booking that is '${booking.status}'`})
+        }
+        booking.status = 'cancelled'
+        await booking.save()
+        return res.status(200).json({message: "Booking cancelled successfully", booking})
+    }
+
+    catch(error) {
+        console.error(error)
+        res.status(500).json({message: "Server error please try again after some time"})
+    }
+}
+
+module.exports = {createBooking, getMyBookings, cancelBooking}
