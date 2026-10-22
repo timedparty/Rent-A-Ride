@@ -8,8 +8,6 @@ function Register() {
     email: '',
     password: '',
     phone: '',
-    licenseNo: '',
-    licenseExpiry: '',
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -65,14 +63,6 @@ function Register() {
         <div>
           <label style={{ fontSize: '0.9rem' }}>Phone *</label>
           <input type="tel" name="phone" required value={formData.phone} onChange={handleChange} style={inputStyle} />
-        </div>
-        <div>
-          <label style={{ fontSize: '0.9rem' }}>Driver's License Number</label>
-          <input type="text" name="licenseNo" value={formData.licenseNo} onChange={handleChange} style={inputStyle} />
-        </div>
-        <div>
-          <label style={{ fontSize: '0.9rem' }}>License Expiry Date</label>
-          <input type="date" name="licenseExpiry" value={formData.licenseExpiry} onChange={handleChange} style={inputStyle} />
         </div>
         <button
           type="submit"
