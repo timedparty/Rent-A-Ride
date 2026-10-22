@@ -8,8 +8,6 @@ async function register(req, res) {
         const email = req.body.email;
         const password = req.body.password;
         const phone = req.body.phone;
-        const licenseNo = req.body.licenseNo;
-        const licenseExpiry = req.body.licenseExpiry;
 
         const exists = await User.findOne({ email : email });
         if(exists) {
@@ -20,9 +18,7 @@ async function register(req, res) {
             name : name,
             email : email,
             password : hashedPassword,
-            phone : phone,
-            licenseNo : licenseNo,
-            licenseExpiry : licenseExpiry
+            phone : phone
         });
 
         await newUser.save();

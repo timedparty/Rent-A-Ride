@@ -1,12 +1,13 @@
 const Booking = require('../models/booking.js');
 const Vehicle = require('../models/vehicle.js')
+const User = require('../models/user.js')
 const mongoose = require('mongoose');
 const Branch = require('../models/branch.js');
 
 async function createBooking(req, res) {
-    const allowed = ['vehicle', 'pickupBranch', 'dropoffBranch', 'pickupDate', 'returnDate']
+    const allowed = ['vehicle', 'pickupBranch', 'dropoffBranch', 'pickupDate', 'returnDate', 'licenseNo', 'licenseExpiry']
     try {
-        const {vehicle, pickupBranch, dropoffBranch, pickupDate, returnDate} = req.body
+        const { vehicle, pickupBranch, dropoffBranch, pickupDate, returnDate, licenseNo, licenseExpiry } = req.body
         if(!vehicle || !pickupBranch || !dropoffBranch || !pickupDate || !returnDate) {
             return res.status(400).json({message: "All fields must be present"})
         }
@@ -14,11 +15,18 @@ async function createBooking(req, res) {
             return res.status(400).json({message: "Invalid ID"})
         }
         const keys = Object.keys(req.body)
-        const allfieldspresent = allowed.every(field => keys.includes(field))
+        const allfieldspresent = ['vehicle', 'pickupBranch', 'dropoffBranch', 'pickupDate', 'returnDate'].every(field => keys.includes(field))
         const reqfieldspresent = keys.every(field => allowed.includes(field))
         if(!allfieldspresent || !reqfieldspresent) {
             return res.status(400).json({message: "Must contain only required fields"})
         }
+
+        if(!licenseNo || !licenseExpiry) {
+            return res.status(400).json({message: "Driver's license number and expiry date are required to book a vehicle"})
+        }
+
+        await User.findByIdAndUpdate(req.user.id, { licenseNo, licenseExpiry })
+
         const vehicleData = await Vehicle.findById(vehicle)
         if(!vehicleData) {
             return res.status(404).json({message: "Vehicle not found.Try again with another vehicle"})
