@@ -5,6 +5,7 @@ const authRoutes = require('./routes/authRoutes.js');
 const vehicleRoutes = require('./routes/vehicleRoutes.js');
 const branchRoutes = require('./routes/branchRoutes.js');
 const bookingRoutes = require('./routes/bookingRoutes.js')
+const paymentRoutes = require('./routes/paymentRoutes.js');
 require('dotenv').config();
 
 const app = express();
@@ -14,6 +15,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/vehicles', vehicleRoutes);
 app.use('/api/branches', branchRoutes);
 app.use('/api/bookings', bookingRoutes)
+app.use('/api/payments', paymentRoutes);
 const PORT = process.env.PORT
 
 app.get('/', (req, res) => {

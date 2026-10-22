@@ -28,7 +28,8 @@ async function createBranch(req, res) {
 
 async function getBranches(req, res) {
     try {
-        const branches = await Branch.find({isActive : true}).sort({ city: 1, branchName: 1})
+        const filter = req.query.all === 'true' ? {} : { isActive: true };
+        const branches = await Branch.find(filter).sort({ city: 1, branchName: 1})
         res.status(200).json(branches)
     }
 
